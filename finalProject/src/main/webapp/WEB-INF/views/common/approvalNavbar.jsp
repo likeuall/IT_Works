@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/v4-shims.css">
     <!-- <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <style>
       
  
@@ -207,7 +209,7 @@
     
 
    
-        <a href="reservation.re"><div><p class="listCategory"><i class="fas fa-business-time"></i><br>회의실 예약</p></div></a>
+        <a href="reservation.re?floor=3"><div><p class="listCategory"><i class="fas fa-business-time"></i><br>회의실 예약</p></div></a>
         <a href="manage.me"><div><p class="listCategory"><i class="fas fa-users"></i><br>인사관리</p></div></a>
         <a href=""><div><p class="listCategory"><i class="far fa-id-badge"></i><br>근태관리</p></div></a>
         <a href="approval.me"><div><p class="listCategory"><i class="fas fa-file-signature"></i><br>전자결재</p></div></a>

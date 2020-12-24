@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="reservationMapper">
+
+	<resultMap type="Reservation" id="reserveRset">
+		<result property="reserveNo" column="reserve_no"/>		
+		<result property="room" column="room"/>		
+		<result property="deptCode" column="dept_code"/>		
+		<result property="startPeriod" column="start_period"/>		
+		<result property="endPeriod" column="end_period"/>		
+		<result property="object" column="object"/>		
+		<result property="visiterYn" column="visiter_yn"/>		
+		<result property="floor" column="floor"/>		
+		<result property="memNo" column="mem_no"/>		
+		<result property="status" column="status"/>	
+		
+		<association property="Member" javaType="Member">
+			<result column="mem_name" property="memName"/>
+			<result column="dept_name" property="deptName"/>
+		</association>	
+	</resultMap>
+	
+	<select id="selectFloorReservation" parameterType="_int"
+			resultMap="reserveRset">
+		select r.reserve_no,
+			   r.room,
+			   d.dept_name,
+			   r.start_period,
+			   r.end_period,
+			   r.object,
+			   r.visiter_yn,
+			   r.floor,
+			   e.mem_name,
+			   r.status
+	      from reservation r,
+	      	   employee e,
+	      	   department d  
+	     where r.mem_no = e.mem_no
+	       and r.status = 'Y'	
+	       and r.floor = #{floor}	   
+	</select>
+
+</mapper>

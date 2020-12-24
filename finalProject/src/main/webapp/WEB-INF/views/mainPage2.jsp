@@ -95,7 +95,7 @@
             <li class="profile" ><a class="btn">게시판</a>
                 
             </li>
-            <li class="profile" ><a class="btn">회의실 예약</a>
+            <li class="profile" ><a class="btn" href="reservation.re?floor=3">회의실 예약</a>
                 
             </li>
             <li class="profile" ><a class="btn">인사관리</a>

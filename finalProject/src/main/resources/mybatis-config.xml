@@ -9,6 +9,8 @@
 	<typeAliases>
 		<typeAlias type="com.kh.ITWorks.approval.model.vo.ApprovalDocument" alias="AppDoc"/>
 		<typeAlias type="com.kh.ITWorks.member.model.vo.Member" alias="Member"/>
+		<typeAlias type="com.kh.ITWorks.reservation.model.vo.Reservation" alias="Reservation"/>
+		<typeAlias type="com.kh.ITWorks.support.model.vo.WorkSupport" alias="Support"/>
 	</typeAliases>
 	
 	
@@ -17,6 +19,8 @@
 		<mapper resource="/mappers/approval-mapper.xml"/>
 		<mapper resource="/mappers/member-mapper.xml"/>
 		<mapper resource="/mappers/attendance-mapper.xml"/>
+		<mapper resource="/mappers/support-mapper.xml"/>
+		<mapper resource="/mappers/reservation-mapper.xml"/>
 	</mappers>
 	
 </configuration>
