@@ -1,6 +1,7 @@
 package com.kh.ITWorks.reservation.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,9 @@ public class ReservationServiceImpl implements ReservationService{
 	}
 
 	@Override
-	public Reservation selectReservation(int reserveNo) {
+	public Reservation selectReservation(int rno) {
 		// TODO Auto-generated method stub
-		return null;
+		return rd.selectReservation(rno, sqlss);
 	}
 
 	@Override
@@ -58,6 +59,12 @@ public class ReservationServiceImpl implements ReservationService{
 	@Override
 	public ArrayList<Reservation> selectFloorReservation(int floor) {
 		return rd.selectFloorReservation(floor, sqlss);
+	}
+
+
+	@Override
+	public Reservation ajaxCheckReservation(HashMap<String, Object> hs) {
+		return rd.ajaxCheckReservation(hs, sqlss);
 	}
 
 }

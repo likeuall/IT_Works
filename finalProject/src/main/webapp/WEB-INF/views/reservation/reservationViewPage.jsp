@@ -15,8 +15,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+
+
 <style>
-    div{border: 0px solid rgb(89, 89, 89); box-sizing: border-box;}
+    div{border: px solid rgb(89, 89, 89); box-sizing: border-box;}
     .wrap{
         padding-top: 50px;
         margin:auto; 
@@ -25,7 +27,7 @@
     }
     #datepick{height:5%; margin-top: 40px;}
     #floor{height: 10%; margin-top: 20px;}
-    #tablewrap{height: 50%;}
+    #tablewrap{height: 53%;}
 
     #datepick>*{margin-left: 30px; border: 0;}
     input{border: 0;}
@@ -54,13 +56,47 @@
         }
         $(function(){
             getToday();
+            // 구한 요일 span태그에 넣기
+            document.getElementById("days").textContent = getdays(new Date(document.getElementById("datePicker").value).getDay());
             // 예약창(팝업) 띄우기
             $("#tablewrap>table tbody>tr>td").click(function(){
-                open("reservation.re?floor=${}?reserveNo=${}","childForm",
-                    "width=430, height=600, location=no, menubar=no, scrollbars=no, status=no, toolbar=no, resizable=no");
-                
-            })
-        })
+            	// 열의 인덱스값 가져오기 (0부터)
+            	var rindex = $(this).index();
+     			// 행의 인덱스값 가져오기 (0부터)
+     			var cindex = $(this).parent().index();
+            	// 0. 예약되어있는지 ajax로 확인 -> 되어있으면 조회창, 안되어있으면 등록창
+            	var checkData = {
+            			floor:"${floor}", 					
+        				room:$(".tablewrap thead>tr").children().eq(rindex).text(),
+        				memNo: "${loginUser.memNo}",
+        				deptCode: "${loginUser.deptCode}",
+        				date: $("#datePicker").val(),
+        				day: $("#days").text(),
+        				time: $(this).siblings("th").text().trim().substring(0,2)
+				};
+            	$.ajax({
+            		url:"checkRV.ajax",
+            		type:"post",
+            		data:JSON.stringify(checkData),	// 객체를 문자열로 변환
+            		dataType: "json",
+            		contentType: "application/json; charset=utf-8",
+            		success: function(re){
+            			if(re != null){
+		            	// 1. 이미 예약된 회의실인 경우 (조회창)
+            				open("viewReservation.re?rno="+re.reserveNo,"childForm",
+                            "width=500, height=500, location=no, menubar=no, scrollbars=no, status=no, toolbar=no, resizable=no");            				
+            			}else{
+		            	// 2. 예약되지 않은 회의실인 경우 (등록창)            				
+            				open("insertReservation.re?floor=${floor}","childForm",
+                            "width=500, height=500, location=no, menubar=no, scrollbars=no, status=no, toolbar=no, resizable=no"); 
+            			}
+            			
+            		},error: function(){
+            			console.log("ㅅㅍ");
+            		}
+            	}) 
+            });
+        });
         function dateset(reday, remonth){
             // 날짜 두자리수 표현
             if(reday < 10){
@@ -74,6 +110,20 @@
                 month:remonth
                 };
         }
+        function getdays(num){
+            //요일 구하기
+            var day;
+            switch(num){
+                case 0: day = "(일)"; break; 
+                case 1: day = "(월)"; break; 
+                case 2: day = "(화)"; break; 
+                case 3: day = "(수)"; break; 
+                case 4: day = "(목)"; break; 
+                case 5: day = "(금)"; break; 
+                case 6: day = "(토)"; break; 
+            }
+            return day;
+        }    
         function minusDate(){
             // 날짜 마이너스
             var value = new Date(document.getElementById("datePicker").value);
@@ -81,6 +131,7 @@
             var date = dateset(value.getDate(), value.getMonth()+1);
             var str = value.getFullYear()+"-"+date.month+"-"+date.day;
             document.getElementById("datePicker").value = str;
+            document.getElementById("days").innerText = getdays(new Date(document.getElementById("datePicker").value).getDay());
         }
         function plusDate(){
             // 날짜 플러스
@@ -89,6 +140,7 @@
             var date = dateset(value.getDate(), value.getMonth()+1);
             var str = value.getFullYear()+"-"+date.month+"-"+date.day;
             document.getElementById("datePicker").value = str;
+            document.getElementById("days").innerText = getdays(new Date(document.getElementById("datePicker").value).getDay());
         }
     </script>
     
@@ -97,8 +149,10 @@
     <div class="wrap">
         <h4>회의실 예약</h4>
         <div id="datepick" align="center">
-            <button type="button" class="btn1-light" onclick="minusDate();"><span class="material-icons">arrow_left</span></button>
-            <input type="date" id="datePicker">
+            <button type="button" class="btn1-light" onclick="minusDate();">
+            <span class="material-icons">arrow_left</span></button>
+            <span id="days" style="display: inline;"></span>
+            <input type="date" id="datePicker" style="margin-left: 0px;">
             <button type="button" class="btn1-light" onclick="plusDate();"><span class="material-icons">arrow_right</span></button>
             <button type="button" class="btn1" onclick="getToday();">Today</button>
         </div>
@@ -115,224 +169,31 @@
                 <thead>
                     <tr>
                         <th width="60px"></th>
-                        <th width="150px" data-toggle="tooltip" title="6인, 화이트보드, 노트북">소회의실 Ⅰ</th>
-                        <th width="150px" data-toggle="tooltip" title="8인, 화이트보드, 노트북">소회의실 Ⅱ</th>
+                        <th width="150px" data-toggle="tooltip" title="6인, 화이트보드, 노트북">소회의실 1</th>
+                        <th width="150px" data-toggle="tooltip" title="8인, 화이트보드, 노트북">소회의실 2</th>
                         <th width="150px" data-toggle="tooltip" title="15인, 화이트보드, 노트북">중회의실</th>
                         <th width="150px" data-toggle="tooltip" title="30인, 화이트보드, 노트북, 빔프로젝터">대회의실</th>
                         <th width="150px" data-toggle="tooltip" title="50인, 탁상마이크, 노트북, 빔프로젝터">중역회의실</th>
                     </tr>
                 </thead>
                 <tbody align="center">
-                    <tr>
-                        <th>09:00</th>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th>10:00</th>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th>11:00</th>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th>12:00</th>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th>13:00</th>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th>14:00</th>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th>15:00</th>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th>16:00</th>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th>17:00</th>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th>18:00</th>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+	                <c:forEach var="t" begin="9" end="18">
+	                    <tr>
+	                        <th>${t}:00</th>
+		                    <td></td>			<!-- 소회의실 1 -->
+	                        <td></td>			<!-- 소회의실 2 -->
+	                        <td></td>			<!-- 중회의실 -->
+	                        <td></td>			<!-- 대회의실 -->
+	                        <td></td>			<!-- 중역회의실 -->
+	                    </tr>
+	                </c:forEach>
                 </tbody>
             </table>
         </div>
     </div>
-
-    <!-- 회의실 예약 모달 -->
-    <div class="modal fade" id="reservation">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">회의실 예약</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button> 
-                </div>
-                <form action="★" method="post">
-                    <!-- Modal Body -->
-                    <div class="modal-body tablewrap">
-                        <table>
-                            <tr>
-                                <th>신청자</th>
-                                <td><input type="text" name="" value="홍길동" readonly></td>
-                            </tr>
-                            <tr>
-                                <th>부서</th>
-                                <td><input type="text" name="" value="개발팀" readonly></td>
-                            </tr>
-                            <tr>
-                                <th>시작일자 *</th>
-                                <td>
-                                    <input type="date" name="" required>
-                                    <input type="text" class="timepicker" name="time"/>   
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>종료일자 *</th>
-                                <td>
-                                    <input type="datetime-local" name="" required>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>회의실 *</th>
-                                <td>
-                                    <select name="" id="" required>
-                                        <option value="소회의실 Ⅰ">소회의실 Ⅰ</option>
-                                        <option value="소회의실 Ⅱ">소회의실 Ⅱ</option>
-                                        <option value="중회의실">중회의실</option>
-                                        <option value="대회의실">대회의실</option>
-                                        <option value="중역회의실">중역회의실</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>사용목적 * </th>
-                                <td><input type="text" name="" value="" placeholder="내용을 입력해주세요" required></td>
-                            </tr>
-                            <tr>
-                                <th>외부인참석여부</th>
-                                <td>
-                                    <label class="form-check-label" style="margin-right: 30px;">
-                                        <input type="radio" name="visiterYn" id="yes"> 예
-                                    </label>
-                                    <label class="form-check-label">
-                                        <input type="radio" name="visiterYn" id="no"> 아니오
-                                    </label>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-info">신청</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- 회의실 조회 모달 -->
-    <div class="modal fade" id="reservationCheck">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">회의실 예약현황</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button> 
-                </div>
-                    <!-- Modal Body -->
-                    <div class="modal-body tablewrap">
-                        <table>
-                            <tr>
-                                <th>신청자</th>
-                                <td>홍길동</td>
-                            </tr>
-                            <tr>
-                                <th>부서</th>
-                                <td>개발팀</td>
-                            </tr>
-                            <tr>
-                                <th>시작일자</th>
-                                <td>
-                                    2020.12.14 (월) 09:00 
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>종료일자</th>
-                                <td>
-                                    2020.12.14 (월) 11:00 
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>회의실</th>
-                                <td>
-                                    소회의실 Ⅰ
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>사용목적 </th>
-                                <td>총무팀 주간 회의</td>
-                            </tr>
-                            <tr>
-                                <th>외부인참석여부</th>
-                                <td>
-                                    예
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-            </div>
-        </div>
-    </div>
+    
+    <script type="text/javascript">
+    
+    </script>
 </body>
 </html>
