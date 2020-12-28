@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>    
+    pageEncoding="UTF-8" import="com.kh.ITWorks.reservation.model.vo.Reservation"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<% Reservation re = (Reservation)request.getAttribute("re"); %>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,7 +11,7 @@
 <style>
     /* The popup form - hidden by default */
     .form-popup {
-    width: 300px;
+    width: 400px;
     border: 3px solid #f1f1f1;
     z-index: 9;
     padding-left: 5px;
@@ -51,38 +52,45 @@
                     <table>
                         <tr>
                             <th>신청자</th>
-                            <td>홍길동</td>
+                            <td><%= re.getMem().getMemName() %></td>
                         </tr>
                         <tr>
                             <th>부서</th>
-                            <td>개발팀</td>
+                            <td><%= re.getMem().getDeptName() %></td>
                         </tr>
                         <tr>
                             <th>시작일자</th>
                             <td>
-                                2020.12.14 (월) 09:00 
+                                <%= re.getStartPeriod() %>
                             </td>
                         </tr>
                         <tr>
                             <th>종료일자</th>
                             <td>
-                                2020.12.14 (월) 11:00 
+                                <%= re.getEndPeriod() %>
                             </td>
                         </tr>
                         <tr>
                             <th>회의실</th>
                             <td>
-                                소회의실 Ⅰ
+                                <%= re.getRoom() %>
                             </td>
                         </tr>
                         <tr>
                             <th>사용목적 </th>
-                            <td>총무팀 주간 회의</td>
+                            <td><%= re.getObject() %></td>
                         </tr>
                         <tr>
                             <th>외부인참석여부</th>
                             <td>
-                                예
+                            	<c:choose>
+                                <c:when test="${ re.visiterYn eq 'Y' }" >
+                                	예
+                                </c:when>
+                                <c:otherwise>
+                                	아니오
+                                </c:otherwise>
+                            	</c:choose>
                             </td>
                         </tr>
                     </table>
@@ -90,10 +98,18 @@
             <!-- Modal footer -->
             <div class="modal-footer" align="right">
                 <!-- 작성자만 볼 수 있게 -->
-                <button type="submit" class="btn btn-info">수정</button>
+                <c:if test="${ loginUser.memNo eq re.memNo }">
+	                <button type="button" class="btn btn-info" onclick="goUpdate();">수정</button>
+                </c:if>
                 <button type="button" class="btn cancel" onclick="window.close();">닫기</button>
             </div>
         </div>
     </div>
+    <script>
+    	function goUpdate(){
+    		open("updateReservation.re?rno=${re.reserveNo}","childForm",
+            "width=400, height=500, location=no, menubar=no, scrollbars=no, status=no, toolbar=no, resizable=no"); 
+    	}
+    </script>
 </body>
 </html>

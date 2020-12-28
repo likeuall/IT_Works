@@ -9,11 +9,13 @@
 <!-- 제이쿼리 -->
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <!-- datepair -->
-<script type="text/javascript" src="jquery-timepicker-1.3.5/jquery.timepicker.js"></script>
-<link rel="stylesheet" type="text/css" href="jquery-timepicker-1.3.5/jquery.timepicker.css" />
-<link rel="stylesheet" type="text/css" href="Customizable-jQuery-Timepicker-Plugin-timepicker/documentation-assets/bootstrap-datepicker.css" />
-<script type="text/javascript" src="Customizable-jQuery-Timepicker-Plugin-timepicker/documentation-assets/bootstrap-datepicker.js"></script>
-<script type="text/javascript" src="jonthornton-Datepair.js-7087c0b/src/Datepair.js"></script>
+<script type="text/javascript" src="resources/src/jquery.timepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="resources/src/jquery.timepicker.css" />
+<link rel="stylesheet" type="text/css" href="resources/src/bootstrap-datepicker.css" />
+<script type="text/javascript" src="resources/src/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="resources/src/Datepair.js"></script>
+<!-- 한글팩 -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.kr.min.js"></script>
 
 <style>
 	 /* The popup form - hidden by default */
@@ -163,8 +165,13 @@
                 scrollbar: true
             });
             $('.form-container .date').datepicker({
-                'format': 'yyyy/mm/dd',
-                'autoclose': true
+            	// 속성 : https://uxsolutions.github.io/bootstrap-datepicker/?#sandbox
+                format: 'yyyy/mm/dd(D)',
+                autoclose: true,
+                todayHighlight:true,
+                todayBtn:'linked',
+                language:'kr',
+                daysOfWeekDisabled: "0,6"
             });
         })
       </script>

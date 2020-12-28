@@ -1,6 +1,7 @@
 package com.kh.ITWorks.reservation.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.kh.ITWorks.common.model.vo.PageInfo;
 import com.kh.ITWorks.reservation.model.vo.Reservation;
@@ -20,5 +21,8 @@ public interface ReservationService {
 	int deleteReservation(int reserveNo);
 //	6. 층별 예약조회
 	ArrayList<Reservation> selectFloorReservation(int floor);
+	
+//	7. 예약여부확인 (에이작스)
+	Reservation ajaxCheckReservation(HashMap<String, Object> hs);
 
 }
