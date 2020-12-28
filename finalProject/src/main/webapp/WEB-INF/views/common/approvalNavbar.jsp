@@ -14,7 +14,8 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/v4-shims.css">
     <!-- <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script> -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <style>
@@ -175,6 +176,16 @@
 </head>
 <body>
 
+	<%---------------- 알람메세지 세션 --------------------%>
+	<c:if test="${ !empty alertMsg }">
+		<script type="text/javascript">
+			alert("${ alertMsg }");
+		</script>
+		<c:remove var="alertMsg" scope="session"/>
+	</c:if>
+	<%---------------- 알람메세지 세션 --------------------%>
+	
+	
 <!-- 탑 네비바-->
     <nav class="navBar">
         <div class="navLogo">
